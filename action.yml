@@ -1,0 +1,67 @@
+name: git-spell-check
+description: "Runs a spell checker only on the changed lines in a pull request"
+
+inputs:
+  base_branch:
+    description: "Base branch to diff against"
+    required: false
+    default: ${{ github.event.pull_request.base.ref || github.event.repository.default_branch }}
+  include:
+    description: "JSON array of glob patterns to include"
+    required: false
+    default: |
+      [
+        "**/*.md",
+        "**/*.txt",
+        "**/*.rst",
+        "**/*.json",
+        "**/*.yaml",
+        "**/*.yml",
+        "**/*.ini",
+        "**/*.tex",
+        "**/*.html",
+        "**/*.xml",
+        "**/*.xhtml",
+        "**/*.csv"
+      ]
+  exclude:
+    description: "JSON array of glob patterns to exclude"
+    required: false
+    default: '[]'
+  cmd:
+    description: "Spell checker command to run"
+    required: false
+    default: |
+      aspell --mode=sgml
+             --add-sgml-skip=code,pre,style,script,command,literal,ulink,parameter,filename,programlisting
+             --lang=en
+        list
+  dictionary:
+    description: "Custom words to ignore (space-separated)"
+    required: false
+    default: ""
+  debug:
+    description: "Debug output"
+    required: false
+    default: ${{ github.debug }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.x"
+
+    - name: Run git-spell-check
+      shell: bash
+      env: # GitHub does not pass the default values to the action script.
+        INPUT_BASE_BRANCH: ${{ inputs.base_branch }}
+        INPUT_INCLUDE: ${{ inputs.include }}
+        INPUT_EXCLUDE: ${{ inputs.exclude }}
+        INPUT_CMD: ${{ inputs.cmd }}
+        INPUT_DICTIONARY: ${{ inputs.dictionary }}
+        INPUT_DEBUG: ${{ inputs.debug }}
+      run: |
+        export
+        python ${{ github.action_path }}/git-spell-check.py

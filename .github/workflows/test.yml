@@ -1,0 +1,31 @@
+name: Test git-spell-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install aspell
+        run: |
+          sudo apt-get install -y aspell aspell-en
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: pytest
+      - uses: compiler-research/git-spell-check@vgvassilev-patch-1
+        with:
+          debug: 1
+      - name: Setup tmate session
+        if: ${{ !cancelled() && runner.debug }}
+        uses: mxschmitt/action-tmate@v3
+        # When debugging increase to a suitable value!
+        timeout-minutes: 30
