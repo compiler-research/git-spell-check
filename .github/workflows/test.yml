@@ -21,9 +21,12 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run tests
         run: pytest
-      - uses: compiler-research/git-spell-check@${{ github.event.pull_request.base.ref }}
+      - uses: compiler-research/git-spell-check@master
         with:
           debug: 1
+      - name: Dump GitHub context
+        if: ${{ failure() }}
+        run: echo "${{ toJSON(github) }}"
       - name: Setup tmate session
         if: ${{ !cancelled() && runner.debug }}
         uses: mxschmitt/action-tmate@v3
