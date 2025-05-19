@@ -4,7 +4,7 @@ Run a spell checker **only on changed lines in pull requests**.
 
 ## Features
 
-- Ony checks added/modified lines
+- Only checks added/modified lines
 - Ignore custom words
 - Works with any spell checker (default: `aspell`)
 - Uses GitHub annotations for inline results
