@@ -98,6 +98,7 @@ def run_spell_checker(lines, cmd="aspell list", dictionary_words=None):
 
 def emit_github_annotations(file, annotations):
     for lineno, word, context in annotations:
+        if is_debug: print(f"Emitting github annotation for file='{file}',line='{lineno}'")
         print(f"::error file={file},line={lineno}::Possible typo: '{word}' in line: {context}")
 
 
