@@ -22,6 +22,11 @@ jobs:
       - name: Run tests
         run: pytest
       - uses: compiler-research/git-spell-check@master
+        with:
+          debug: 1
+      - name: Dump GitHub context
+        if: ${{ failure() }}
+        run: echo "${{ toJSON(github) }}"
       - name: Setup tmate session
         if: ${{ !cancelled() && runner.debug }}
         uses: mxschmitt/action-tmate@v3

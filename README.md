@@ -1,6 +1,6 @@
 # git-spell-check
 
-Run a spell checker **only on changed lines in pull requests**.
+Run aaa spell checker **only on changed lines in pull requests**.
 
 ## Features
 
